@@ -1,7 +1,7 @@
 import lazyLoading from './lazyLoading'
 
 export default {
-  name: 'Tables',
+  name: 'Area',
   meta: {
     icon: 'fa-table',
     expanded: false
