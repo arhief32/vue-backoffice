@@ -4,6 +4,14 @@ import charts from './charts'
 import uifeatures from './uifeatures'
 import components from './components'
 import tables from './tables'
+import report from './report'
+import area from './area'
+import code from './code'
+import pickAndDrop from './pickanddrop'
+import feeder from './feeder'
+import ticket from './ticket'
+import tripstore from './tripstore'
+import corporate from './corporate'
 
 // show: meta.label -> name
 // name: component name
@@ -30,6 +38,14 @@ const state = {
       },
       component: lazyLoading('axios', true)
     },
+    report,
+    area,
+    code,
+    pickAndDrop,
+    feeder,
+    ticket,
+    tripstore,
+    corporate,
     charts,
     uifeatures,
     components,

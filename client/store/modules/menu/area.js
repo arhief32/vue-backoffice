@@ -3,37 +3,37 @@ import lazyLoading from './lazyLoading'
 export default {
   name: 'Area',
   meta: {
-    icon: 'fa-table',
+    icon: 'fa-map-marker',
     expanded: false
   },
 
   children: [
     {
-      name: 'BasicTables',
-      path: '/tables/basic',
+      name: 'ListArea',
+      path: '/area/list-area',
       meta: {
-        label: 'Basic Tables',
-        link: 'tables/Basic.vue'
+        label: 'List Area',
+        link: 'area/listarea.vue'
       },
-      component: lazyLoading('tables/Basic')
+      component: lazyLoading('area/listarea')
     },
     {
-      name: 'BasicTablesV2',
-      path: '/tables/basicv2',
+      name: 'Route',
+      path: '/area/route',
       meta: {
-        label: 'Basic Tables V2',
-        link: 'tables/BasicV2.vue'
+        label: 'Route',
+        link: 'area/route.vue'
       },
-      component: lazyLoading('tables/BasicV2')
+      component: lazyLoading('area/route')
     },
     {
-      name: 'BasicTablesV3',
-      path: '/tables/basicv3',
+      name: 'SLAData',
+      path: '/area/sla-data',
       meta: {
-        label: 'Basic Tables V3',
-        link: 'tables/BasicV3.vue'
+        label: 'SLA Data',
+        link: 'area/sladata.vue'
       },
-      component: lazyLoading('tables/BasicV3')
+      component: lazyLoading('area/sladata')
     }
   ]
 }
