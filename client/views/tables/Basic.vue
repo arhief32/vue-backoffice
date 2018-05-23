@@ -76,7 +76,7 @@
 <script>
 import axios from 'axios'
 export default {
-
+  
   created () {
     axios.get(`https://dev.triplogic.io/v2/service/invoices/all`)
     .then(response => {
