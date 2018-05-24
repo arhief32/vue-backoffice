@@ -1,5 +1,10 @@
 <template>
   <div>
+    <card-modal ref="statusModal" transition="zoom">
+      <div class="content has-text-centered">
+        
+      </div>
+    </card-modal>
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <article class="tile is-child box">
@@ -53,7 +58,21 @@
                   {{ invoice.amount }}
                 </td>
                 <td>
-                  {{ invoice.status }}
+                  <div v-if="invoice.status === 'unpaid'">
+                    <button data-v-7b33bc41="" class="button is-danger" v-on:click="statusModal">Unpaid</button>
+                  </div>
+                  <div v-if="invoice.status === 'prepaid'">
+                    <button data-v-7b33bc41="" class="button is-primary" v-on:click="statusModal">Prepaid</button>
+                  </div>
+                  <div v-if="invoice.status === 'paid'">
+                    <button data-v-7b33bc41="" class="button is-success" v-on:click="statusModal">Paid</button>
+                  </div>
+                  <div v-if="invoice.status === 'canceled'">
+                    <button data-v-7b33bc41="" class="button is-danger" v-on:click="statusModal">Canceled</button>
+                  </div>
+                  <div v-if="invoice.status === 'expired'">
+                    <button data-v-7b33bc41="" class="button is-light" v-on:click="statusModal">Expired</button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -75,8 +94,8 @@
 
 <script>
 import axios from 'axios'
+import { CardModal } from 'vue-bulma-modal'
 export default {
-  
   created () {
     axios.get(`https://dev.triplogic.io/v2/service/invoices/all`)
     .then(response => {
@@ -91,7 +110,24 @@ export default {
   data () {
     return {
       invoices: [],
-      errors: []
+      errors: [],
+      options: [
+        { text: 'Unpaid', value: 'unpaid' },
+        { text: 'Prepaid', value: 'prepaid' },
+        { text: 'Paid', value: 'paid' },
+        { text: 'Canceled', value: 'canceled' },
+        { text: 'Expired', value: 'expired' }
+      ]
+    }
+  },
+
+  components: {
+    CardModal
+  },
+
+  methods: {
+    statusModal: function () {
+      this.$refs.statusModal.active()
     }
   }
 }
