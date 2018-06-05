@@ -77,6 +77,16 @@
               </tr>
             </tbody>
           </table>
+          <paginate
+            :page-count="50"
+            :page-range="3"
+            :margin-pages="2"
+            :click-handler="clickCallback"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :container-class="'pagination'"
+            :page-class="'page-item'">
+          </paginate>
         </article>
       </div>
     </div>
@@ -90,11 +100,41 @@
   min-height: .01%;
   overflow-x: auto;
 }
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.pagination a:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 </style>
 
 <script>
 import axios from 'axios'
 import { CardModal } from 'vue-bulma-modal'
+import Paginate from 'vuejs-paginate'
 export default {
   created () {
     axios.get(`https://dev.triplogic.io/v2/service/invoices/all`)
@@ -122,12 +162,16 @@ export default {
   },
 
   components: {
-    CardModal
+    CardModal,
+    Paginate
   },
 
   methods: {
     statusModal: function () {
       this.$refs.statusModal.active()
+    },
+    clickCallback: function (pageNum) {
+      console.log(pageNum)
     }
   }
 }
