@@ -17,7 +17,7 @@
 export default {
 
   data () {
-    return this.$store.state.pkg                          
+    return this.$store.state.pkg
   }
 
 }
