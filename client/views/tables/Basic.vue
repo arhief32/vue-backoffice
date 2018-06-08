@@ -115,8 +115,8 @@ export default {
     getInvoices () {
       axios.get(this.url)
         .then(response => {
-          this.invoices = response.data.data
-          this.makePagination(response.data)
+          this.invoices = response.data.data.data
+          this.makePagination(response.data.data)
         })
     },
     makePagination (data) {
