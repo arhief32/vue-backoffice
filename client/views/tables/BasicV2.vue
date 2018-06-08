@@ -26,6 +26,10 @@
                           :displayPage="5"
                           :lastPage="100" />
                       </div>
+                      <div>
+                        <button class="btn btn-default">Previous</button>
+                        <button class="btn btn-default">Next</button>
+                      </div>
                     </div>
                 </article>
             </div>

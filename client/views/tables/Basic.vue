@@ -9,6 +9,12 @@
       <div class="tile is-parent">
         <article class="tile is-child box">
           <h4 class="title">Table</h4>
+          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
+            prev
+          </button>
+          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
+            next
+          </button>
           <table class="table">
             <thead>
               <tr>
@@ -26,7 +32,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="invoice in invoices" :key="invoice.id">
+              <tr v-for="invoice in invoices">
                 <td>{{ invoice.id }}</td>
                 <td>{{ invoice.sla }}</td>
                 <td>{{ invoice.packet_detail.id }}</td>
@@ -35,7 +41,7 @@
                 <td>{{ invoice.packet_detail.origin_detail.city_name }}</td>
                 <td>{{ invoice.packet_detail.destination_detail.city_name }}</td>
                 <td>{{ invoice.packet_detail.departure_expectation_time }}</td>
-                <td><!-- {{ invoice.packet_detail.sender_address_detail.contact_name }} --></td>
+                <td>{{ invoice.packet_detail.sender_address_detail.contact_name }}</td>
                 <td>{{ invoice.amount }}</td>
                 <td>
                   <div v-if="invoice.status === 'unpaid'">
@@ -57,6 +63,13 @@
               </tr>
             </tbody>
           </table>
+          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
+            prev
+          </button>
+          Page {{ pagination.current_page }} of {{ pagination.last_page }}
+          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
+            next
+          </button>
         </article>
       </div>
     </div>
@@ -80,21 +93,11 @@ import axios from 'axios'
 import { CardModal } from 'vue-bulma-modal'
 
 export default {
-  created () {
-    axios.get(`http://localhost:8585/service/invoices/all`)
-    .then(response => {
-      this.invoices = response.data.data.data
-      console.log(this.invoices)
-    })
-    .catch(e => {
-      console.log(e)
-    })
-  },
-
   data () {
     return {
+      url: 'http://localhost:8585/service/invoices/all?page=12',
+      pagination: [],
       invoices: [],
-      errors: [],
       options: [
         { text: 'Unpaid', value: 'unpaid' },
         { text: 'Prepaid', value: 'prepaid' },
@@ -105,11 +108,35 @@ export default {
     }
   },
 
+  mounted () {
+    this.getInvoices()
+  },
+
   components: {
     CardModal
   },
 
   methods: {
+    getInvoices () {
+      axios.get(this.url)
+        .then(response => {
+          this.invoices = response.data.data
+          this.makePagination(response.data)
+        })
+    },
+    makePagination (data) {
+      let pagination = {
+        current_page: data.current_page,
+        last_page: data.last_page,
+        next_page_url: data.next_page_url,
+        prev_page_url: data.prev_page_url
+      }
+      this.pagination = pagination
+    },
+    fetchPaginateInvoices (url) {
+      this.url = url
+      this.getInvoices()
+    },
     statusModal: function () {
       this.$refs.statusModal.active()
     }
