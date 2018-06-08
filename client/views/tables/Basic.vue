@@ -27,36 +27,16 @@
             </thead>
             <tbody>
               <tr v-for="invoice in invoices" :key="invoice.id">
-                <td>
-                  {{ invoice.id }}
-                </td>
-                <td>
-                  {{ invoice.sla }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.id }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.object_id }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.status }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.origin_detail.city_name }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.destination_detail.city_name }}
-                </td>
-                <td>
-                  {{ invoice.packet_detail.departure_expectation_time }}
-                </td>
-                <td>
-                  <!-- {{ invoice.packet_detail.sender_address_detail.contact_name }} -->
-                </td>
-                <td>
-                  {{ invoice.amount }}
-                </td>
+                <td>{{ invoice.id }}</td>
+                <td>{{ invoice.sla }}</td>
+                <td>{{ invoice.packet_detail.id }}</td>
+                <td>{{ invoice.packet_detail.object_id }}</td>
+                <td>{{ invoice.packet_detail.status }}</td>
+                <td>{{ invoice.packet_detail.origin_detail.city_name }}</td>
+                <td>{{ invoice.packet_detail.destination_detail.city_name }}</td>
+                <td>{{ invoice.packet_detail.departure_expectation_time }}</td>
+                <td><!-- {{ invoice.packet_detail.sender_address_detail.contact_name }} --></td>
+                <td>{{ invoice.amount }}</td>
                 <td>
                   <div v-if="invoice.status === 'unpaid'">
                     <button data-v-7b33bc41="" class="button is-danger" v-on:click="statusModal">Unpaid</button>
@@ -77,16 +57,6 @@
               </tr>
             </tbody>
           </table>
-          <paginate
-            :page-count="50"
-            :page-range="3"
-            :margin-pages="2"
-            :click-handler="clickCallback"
-            :prev-text="'Prev'"
-            :next-text="'Next'"
-            :container-class="'pagination'"
-            :page-class="'page-item'">
-          </paginate>
         </article>
       </div>
     </div>
@@ -100,44 +70,18 @@
   min-height: .01%;
   overflow-x: auto;
 }
-.pagination {
-    display: inline-block;
-}
-
-.pagination a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    border: 1px solid #ddd;
-}
-
-.pagination a.active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
-}
-
-.pagination a:hover:not(.active) {background-color: #ddd;}
-
-.pagination a:first-child {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.pagination a:last-child {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+.hero {
+  margin-bottom: 35px;
 }
 </style>
 
 <script>
 import axios from 'axios'
 import { CardModal } from 'vue-bulma-modal'
-import Paginate from 'vuejs-paginate'
+
 export default {
   created () {
-    axios.get(`https://dev.triplogic.io/v2/service/invoices/all`)
+    axios.get(`http://localhost:8585/service/invoices/all`)
     .then(response => {
       this.invoices = response.data.data.data
       console.log(this.invoices)
@@ -162,16 +106,12 @@ export default {
   },
 
   components: {
-    CardModal,
-    Paginate
+    CardModal
   },
 
   methods: {
     statusModal: function () {
       this.$refs.statusModal.active()
-    },
-    clickCallback: function (pageNum) {
-      console.log(pageNum)
     }
   }
 }
