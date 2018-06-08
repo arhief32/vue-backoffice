@@ -9,12 +9,15 @@
       <div class="tile is-parent">
         <article class="tile is-child box">
           <h4 class="title">Table</h4>
-          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
-            prev
-          </button>
-          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
-            next
-          </button>
+          <div class="pagination">
+            <a v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
+              ❮
+            </a>
+            <a>Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+            <a v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
+              ❯
+            </a>
+          </div>
           <table class="table">
             <thead>
               <tr>
@@ -63,30 +66,22 @@
               </tr>
             </tbody>
           </table>
-          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
-            prev
-          </button>
-          Page {{ pagination.current_page }} of {{ pagination.last_page }}
-          <button class="button is-warning" v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
-            next
-          </button>
+          <div class="pagination">
+            <a v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
+              ❮
+            </a>
+            <a>Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+            <a v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
+              ❯
+            </a>
+          </div>
         </article>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
-.table-responsive {
-  display: block;
-  width: 100%;
-  min-height: .01%;
-  overflow-x: auto;
-}
-.hero {
-  margin-bottom: 35px;
-}
-</style>
+<style src="../table.css"></style>
 
 <script>
 import axios from 'axios'
