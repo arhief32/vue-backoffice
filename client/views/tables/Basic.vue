@@ -18,6 +18,9 @@
               ❯
             </a>
           </div>
+          <div class="pagination">
+            <a v-for="n in numbers" v-on:click="fetchPaginateNumber('http://localhost:8585/service/invoices/all?page='+n)" :disabled="!url+n">{{ n }}</a>
+          </div>
           <table class="table">
             <thead>
               <tr>
@@ -90,7 +93,8 @@ import { CardModal } from 'vue-bulma-modal'
 export default {
   data () {
     return {
-      url: 'http://localhost:8585/service/invoices/all?page=12',
+      url: 'http://localhost:8585/service/invoices/all?page=10',
+      numbers: [],
       pagination: [],
       invoices: [],
       options: [
@@ -105,6 +109,7 @@ export default {
 
   mounted () {
     this.getInvoices()
+    this.numberPagination()
   },
 
   components: {
@@ -117,6 +122,7 @@ export default {
         .then(response => {
           this.invoices = response.data.data.data
           this.makePagination(response.data.data)
+          this.numberPagination(response.data.data)
         })
     },
     makePagination (data) {
@@ -130,11 +136,46 @@ export default {
     },
     fetchPaginateInvoices (url) {
       this.url = url
+      console.log(this.url)
       this.getInvoices()
     },
     statusModal: function () {
       this.$refs.statusModal.active()
-    }
+    },
+    numberPagination: function (data) {
+      var current = data.current_page
+      var last = data.last_page
+      var currentRange = 3
+      var left = current - currentRange
+      var right = current + currentRange + 1
+      var range = []
+      var rangeWithDots = []
+      var l
+
+      for (let i = 1; i <= last; i++) {
+        if ((i === 1) || (i === last) || (i >= left && i < right)) {
+          range.push(i)
+        }
+      }
+
+      for (let i of range) {
+        if (l) {
+          if (i - l === 2) {
+            rangeWithDots.push(l + 1)
+          } else if (i - l !== 1) {
+            rangeWithDots.push('...')
+          }
+        }
+        rangeWithDots.push(i)
+        l = i
+      }
+      this.numbers = rangeWithDots
+    },
+    fetchPaginateNumber (number) {
+      this.url = number
+      console.log(this.url)
+      this.getInvoices()
+    },
   }
 }
 </script>
