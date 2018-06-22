@@ -6,6 +6,7 @@
 }
 .pagination {
     display: inline-block;
+    align-items: right;
 }
 .pagination a {
     color: black;

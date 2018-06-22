@@ -13,13 +13,16 @@
             <a v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
               ❮
             </a>
-            <a>Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+            <a v-for="(n,index) in numbers" 
+              v-on:click="fetchPaginateInvoices(urlTo+n)" 
+              :key="index" 
+              :disabled="!n">
+              {{ n }}
+            </a>
             <a v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
               ❯
             </a>
-          </div>
-          <div class="pagination">
-            <a v-for="n in numbers" v-on:click="fetchPaginateNumber('http://localhost:8585/service/invoices/all?page='+n)" :disabled="!url+n">{{ n }}</a>
+            <a>Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
           </div>
           <table class="table">
             <thead>
@@ -38,7 +41,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="invoice in invoices">
+              <tr v-for="invoice in invoices" :key="invoice.id">
                 <td>{{ invoice.id }}</td>
                 <td>{{ invoice.sla }}</td>
                 <td>{{ invoice.packet_detail.id }}</td>
@@ -93,7 +96,8 @@ import { CardModal } from 'vue-bulma-modal'
 export default {
   data () {
     return {
-      url: 'http://localhost:8585/service/invoices/all?page=10',
+      url: 'http://localhost:8585/service/invoices/all?page=20',
+      urlTo: 'http://localhost:8585/service/invoices/all?page=',
       numbers: [],
       pagination: [],
       invoices: [],
@@ -109,7 +113,6 @@ export default {
 
   mounted () {
     this.getInvoices()
-    this.numberPagination()
   },
 
   components: {
@@ -122,7 +125,6 @@ export default {
         .then(response => {
           this.invoices = response.data.data.data
           this.makePagination(response.data.data)
-          this.numberPagination(response.data.data)
         })
     },
     makePagination (data) {
@@ -133,27 +135,15 @@ export default {
         prev_page_url: data.prev_page_url
       }
       this.pagination = pagination
-    },
-    fetchPaginateInvoices (url) {
-      this.url = url
-      console.log(this.url)
-      this.getInvoices()
-    },
-    statusModal: function () {
-      this.$refs.statusModal.active()
-    },
-    numberPagination: function (data) {
-      var current = data.current_page
-      var last = data.last_page
       var currentRange = 3
-      var left = current - currentRange
-      var right = current + currentRange + 1
+      var left = pagination.current_page - currentRange
+      var right = pagination.current_page + currentRange + 1
       var range = []
       var rangeWithDots = []
       var l
 
-      for (let i = 1; i <= last; i++) {
-        if ((i === 1) || (i === last) || (i >= left && i < right)) {
+      for (let i = 1; i <= pagination.last_page; i++) {
+        if ((i === 1) || (i === pagination.last_page) || (i >= left && i < right)) {
           range.push(i)
         }
       }
@@ -171,11 +161,13 @@ export default {
       }
       this.numbers = rangeWithDots
     },
-    fetchPaginateNumber (number) {
-      this.url = number
-      console.log(this.url)
+    fetchPaginateInvoices (url) {
+      this.url = url
       this.getInvoices()
     },
+    statusModal: function () {
+      this.$refs.statusModal.active()
+    }
   }
 }
 </script>
