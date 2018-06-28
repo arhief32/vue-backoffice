@@ -55,13 +55,12 @@ export default {
         { name: 'sla', title: 'SLA' },
         { name: 'id_packet', title: 'Packet ID' },
         { name: 'packet_detail.object_id', title: 'Object ID' },
-        { name: 'packet_detail.status', title: 'Packet status' },
+        { name: 'packet_detail.status', title: 'Packet status', sortField: 'packet_detail.status', callback: 'packetStatus' },
         { name: 'packet_detail.origin_detail.city_name', title: 'Origin' },
         { name: 'packet_detail.destination_detail.city_name', title: 'Destination' },
         { name: 'packet_detail.departure_expectation_time', title: 'Expectation time' },
-        // { name: 'amount', title: 'Amount' },
-        { name: 'amount', sortField: 'amount', titleClass: 'center aligned', dataClass: 'left aligned', callback: 'formatMoney' },
-        { name: 'status', title: 'Invoice status' }
+        { name: 'amount', title: 'Amount', sortField: 'amount', dataClass: 'has-text-right', callback: 'formatMoney' },
+        { name: 'status', title: 'Invoice status', callback: 'invoiceStatus' }
       ],
       css: {
         tableClass: 'table table-striped table-bordered',
@@ -94,7 +93,29 @@ export default {
     },
     formatMoney (value) {
       let val = (value / 1).toFixed(2).replace('.', ',')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      return 'Rp ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    },
+    packetStatus (value) {
+      if (value === 'pending') {
+        return '<button class="button is-danger is-fullwidth" v-on:click="statusModal">Pending</button>'
+      } else if (value === 'completed') {
+        return '<button class="button is-success is-fullwidth" v-on:click="statusModal">Completed</button>'
+      } else if (value === 'canceled') {
+        return '<button class="button is-light is-fullwidth" v-on:click="statusModal">Canceled</button>'
+      } else {
+        return '<button class="button is-warning is-fullwidth" v-on:click="statusModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
+      }
+    },
+    invoiceStatus (value) {
+      if (value === 'unpaid') {
+        return '<button class="button is-danger is-fullwidth" v-on:click="statusModal">Unpaid</button>'
+      } else if (value === 'prepaid') {
+        return '<button class="button is-primary is-fullwidth" v-on:click="statusModal">Prepaid</button>'
+      } else if (value === 'paid') {
+        return '<button class="button is-success is-fullwidth" v-on:click="statusModal">Paid</button>'
+      } else {
+        return '<button class="button is-light is-fullwidth" v-on:click="statusModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
+      }
     }
   }
 }
