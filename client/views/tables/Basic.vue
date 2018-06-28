@@ -9,6 +9,7 @@
       <div class="tile is-parent">
         <article class="tile is-child box">
           <h4 class="title">Table</h4>
+          <input id="search" name="search" class="fa-align-right" placeholder="search..." />
           <div class="pagination">
             <a v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
               ❮
@@ -76,7 +77,12 @@
             <a v-on:click="fetchPaginateInvoices(pagination.prev_page_url)" :disabled="!pagination.prev_page_url">
               ❮
             </a>
-            <a>Page {{ pagination.current_page }} of {{ pagination.last_page }}</a>
+            <a v-for="(n,index) in numbers" 
+              v-on:click="fetchPaginateInvoices(urlTo+n)" 
+              :key="index" 
+              :disabled="!n">
+              {{ n }}
+            </a>
             <a v-on:click="fetchPaginateInvoices(pagination.next_page_url)" :disabled="!pagination.prev_page_url">
               ❯
             </a>

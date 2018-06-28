@@ -5,30 +5,19 @@
                 <article class="tile is-child box">
                     <h4 class="title">Table with Vuetable</h4>
                     <div id="app-table">
-                      <div>
-                        <pagination 
-                          :urlPrefix="'/tables/basicv2'"
-                          :urlBuilder="urlBuilder"
-                          :currentPage="1" 
-                          :displayPage="5"
-                          :lastPage="100" />
-                      </div>
-                      <vuetable ref="vuetable"
-                        api-url="http://localhost:8585/service/invoices/all"
-                        :fields="fields"
-                        data-path="data.data"
-                        pagination-path="data"
-                      ></vuetable>
-                      <div>
-                        <pagination 
-                          :urlPrefix="'/tables/basicv2'" 
-                          :currentPage="1" 
-                          :displayPage="5"
-                          :lastPage="100" />
-                      </div>
-                      <div>
-                        <button class="btn btn-default">Previous</button>
-                        <button class="btn btn-default">Next</button>
+                      <div class="ui container">
+                        <vuetable-pagination ref="pagination"
+                          :css="css.pagination"
+                          @vuetable-pagination:change-page="onChangePage">
+                        </vuetable-pagination>
+                        <vuetable ref="vuetable"
+                          api-url="http://localhost:8585/service/invoices/all"
+                          :fields="fields"
+                          :css="css"
+                          data-path="data.data"
+                          pagination-path="data"
+                          @vuetable:pagination-data="onPaginationData"
+                        ></vuetable>
                       </div>
                     </div>
                 </article>
@@ -45,23 +34,24 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
   color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
 
 <script>
-import Vuetable from 'vuetable-2'
-import Pagination from 'vue-bulma-pagination'
+import * as Vuetable from 'vuetable-2'
 
 export default {
   components: {
-    'vuetable': Vuetable,
-    'pagination': Pagination
+    'vuetable': Vuetable.Vuetable,
+    'vuetable-pagination': Vuetable.VuetablePagination
   },
   data () {
     return {
       fields: [
-        { name: 'id', title: 'ID' },
+        { name: 'id', title: 'ID', sortField: 'id' },
         { name: 'sla', title: 'SLA' },
         { name: 'id_packet', title: 'Packet ID' },
         { name: 'packet_detail.object_id', title: 'Object ID' },
@@ -69,14 +59,42 @@ export default {
         { name: 'packet_detail.origin_detail.city_name', title: 'Origin' },
         { name: 'packet_detail.destination_detail.city_name', title: 'Destination' },
         { name: 'packet_detail.departure_expectation_time', title: 'Expectation time' },
-        { name: 'amount', title: 'Amount' },
+        // { name: 'amount', title: 'Amount' },
+        { name: 'amount', sortField: 'amount', titleClass: 'center aligned', dataClass: 'left aligned', callback: 'formatMoney' },
         { name: 'status', title: 'Invoice status' }
-      ]
+      ],
+      css: {
+        tableClass: 'table table-striped table-bordered',
+        loadingClass: 'loading',
+        ascendingIcon: 'glyphicon glyphicon-chevron-up',
+        descendingIcon: 'glyphicon glyphicon-chevron-down',
+        handleIcon: 'glyphicon glyphicon-menu-hamburger',
+        pagination: {
+          wrapperClass: 'pagination pull-right',
+          activeClass: 'button is-warning',
+          disabledClass: 'disabled',
+          pageClass: 'button',
+          linkClass: 'button',
+          icons: {
+            first: '',
+            prev: '',
+            next: '',
+            last: ''
+          }
+        }
+      }
     }
   },
   methods: {
-    urlBuilder (page) {
-      return { query: { ...this.$route.query, page } }
+    onPaginationData (paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData)
+    },
+    onChangePage (page) {
+      this.$refs.vuetable.changePage(page)
+    },
+    formatMoney (value) {
+      let val = (value/1).toFixed(2).replace('.', ',')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
   }
 }
