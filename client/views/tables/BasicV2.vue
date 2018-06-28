@@ -1,5 +1,16 @@
 <template>
     <div>
+        <card-modal ref="statusPacketModal" transition="zoom">
+          <div class="content has-text-centered">
+
+          </div>
+        </card-modal>
+        <card-modal ref="statusInvoiceModal" transition="zoom">
+          <div class="content has-text-centered">
+
+          </div>
+        </card-modal>
+        <button class="button is-success is-fullwidth" v-on:click="statusInvoiceModal">Paid</button>
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child box">
@@ -23,9 +34,6 @@
                 </article>
             </div>
         </div>
-        <div>
-            
-        </div>
     </div>
 </template>
 
@@ -42,11 +50,13 @@
 
 <script>
 import * as Vuetable from 'vuetable-2'
+import { CardModal } from 'vue-bulma-modal'
 
 export default {
   components: {
     'vuetable': Vuetable.Vuetable,
-    'vuetable-pagination': Vuetable.VuetablePagination
+    'vuetable-pagination': Vuetable.VuetablePagination,
+    CardModal
   },
   data () {
     return {
@@ -97,25 +107,31 @@ export default {
     },
     packetStatus (value) {
       if (value === 'pending') {
-        return '<button class="button is-danger is-fullwidth" v-on:click="statusModal">Pending</button>'
+        return '<button class="button is-danger is-fullwidth" v-on:click="statusPacketModal">Pending</button>'
       } else if (value === 'completed') {
-        return '<button class="button is-success is-fullwidth" v-on:click="statusModal">Completed</button>'
+        return '<button class="button is-success is-fullwidth" v-on:click="statusPacketModal">Completed</button>'
       } else if (value === 'canceled') {
-        return '<button class="button is-light is-fullwidth" v-on:click="statusModal">Canceled</button>'
+        return '<button class="button is-light is-fullwidth" v-on:click="statusPacketModal">Canceled</button>'
       } else {
-        return '<button class="button is-warning is-fullwidth" v-on:click="statusModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
+        return '<button class="button is-warning is-fullwidth" v-on:click="statusPacketModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
       }
     },
     invoiceStatus (value) {
       if (value === 'unpaid') {
-        return '<button class="button is-danger is-fullwidth" v-on:click="statusModal">Unpaid</button>'
+        return '<button class="button is-danger is-fullwidth" v-on:click="statusInvoiceModal">Unpaid</button>'
       } else if (value === 'prepaid') {
-        return '<button class="button is-primary is-fullwidth" v-on:click="statusModal">Prepaid</button>'
+        return '<button class="button is-primary is-fullwidth" v-on:click="statusInvoiceModal">Prepaid</button>'
       } else if (value === 'paid') {
-        return '<button class="button is-success is-fullwidth" v-on:click="statusModal">Paid</button>'
+        return '<button class="button is-success is-fullwidth" v-on:click="statusInvoiceModal">Paid</button>'
       } else {
-        return '<button class="button is-light is-fullwidth" v-on:click="statusModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
+        return '<button class="button is-light is-fullwidth" v-on:click="statusInvoiceModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
       }
+    },
+    statusPacketModal: function () {
+      this.$refs.statusPacketModal.active()
+    },
+    statusInvoiceModal: function () {
+      this.$refs.statusInvoiceModal.active()
     }
   }
 }
