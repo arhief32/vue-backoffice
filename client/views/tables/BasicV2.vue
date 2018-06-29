@@ -10,7 +10,6 @@
 
           </div>
         </card-modal>
-        <button class="button is-success is-fullwidth" v-on:click="statusInvoiceModal">Paid</button>
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child box">
@@ -145,17 +144,6 @@ export default {
     formatMoney (value) {
       let val = (value / 1).toFixed(2).replace('.', ',')
       return 'Rp ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-    },
-    packetStatus (value) {
-      if (value === 'pending') {
-        return '<button class="button is-danger is-fullwidth" v-on:click="statusPacketModal">Pending</button>'
-      } else if (value === 'completed') {
-        return '<button class="button is-success is-fullwidth" v-on:click="statusPacketModal">Completed</button>'
-      } else if (value === 'canceled') {
-        return '<button class="button is-light is-fullwidth" v-on:click="statusPacketModal">Canceled</button>'
-      } else {
-        return '<button class="button is-warning is-fullwidth" v-on:click="statusPacketModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
-      }
     },
     statusPacketModal: function (action, data, index) {
       console.log('the value is: ' + action, data.packet_detail.status, index)
