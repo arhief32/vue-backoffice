@@ -28,7 +28,40 @@
                           data-path="data.data"
                           pagination-path="data"
                           @vuetable:pagination-data="onPaginationData"
-                        ></vuetable>
+                        >
+                          <template slot="packet_detail.status" slot-scope="props">
+                            <div v-if="props.rowData.packet_detail.status === 'pending'">
+                              <button class="button is-danger is-fullwidth" @click="statusPacketModal('edit-status-packet', props.rowData, props.rowIndex)">Pending</button>
+                            </div>
+                            <div v-else-if="props.rowData.packet_detail.status === 'completed'">
+                              <button class="button is-success is-fullwidth" @click="statusPacketModal('edit-status-packet', props.rowData, props.rowIndex)">Completed</button>
+                            </div>
+                            <div v-else-if="props.rowData.packet_detail.status === 'canceled'">
+                              <button class="button is-light is-fullwidth" @click="statusPacketModal('edit-status-packet', props.rowData, props.rowIndex)">Canceled</button>
+                            </div>
+                            <div v-else>
+                              <button class="button is-warning is-fullwidth" @click="statusPacketModal('edit-status-packet', props.rowData, props.rowIndex)"> {{ props.rowData.packet_detail.status.charAt(0).toUpperCase() + props.rowData.packet_detail.status.slice(1).toLowerCase() }} </button>
+                            </div>
+                          </template>
+
+                          <template slot="status" slot-scope="props">
+                            <div v-if="props.rowData.status === 'unpaid'">
+                              <button class="button is-danger is-fullwidth" @click="statusInvoiceModal('edit-status-invoice', props.rowData, props.rowIndex)">Unpaid</button>
+                            </div>
+                            <div v-if="props.rowData.status === 'prepaid'">
+                              <button class="button is-primary is-fullwidth" @click="statusInvoiceModal('edit-status-invoice', props.rowData, props.rowIndex)">Prepaid</button>
+                            </div>
+                            <div v-if="props.rowData.status === 'paid'">
+                              <button class="button is-success is-fullwidth" @click="statusInvoiceModal('edit-status-invoice', props.rowData, props.rowIndex)">Paid</button>
+                            </div>
+                            <div v-if="props.rowData.status === 'canceled'">
+                              <button class="button is-danger is-fullwidth" @click="statusInvoiceModal('edit-status-invoice', props.rowData, props.rowIndex)">Canceled</button>
+                            </div>
+                            <div v-if="props.rowData.status === 'expired'">
+                              <button class="button is-light is-fullwidth" @click="statusInvoiceModal('edit-status-invoice', props.rowData, props.rowIndex)">Expired</button>
+                            </div>
+                          </template>
+                        </vuetable>
                       </div>
                     </div>
                 </article>
@@ -58,6 +91,14 @@ export default {
     'vuetable-pagination': Vuetable.VuetablePagination,
     CardModal
   },
+  props: {
+    rowData: {
+      type: Object
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
   data () {
     return {
       fields: [
@@ -65,12 +106,12 @@ export default {
         { name: 'sla', title: 'SLA' },
         { name: 'id_packet', title: 'Packet ID' },
         { name: 'packet_detail.object_id', title: 'Object ID' },
-        { name: 'packet_detail.status', title: 'Packet status', sortField: 'packet_detail.status', callback: 'packetStatus' },
+        { name: '__slot:packet_detail.status', title: 'Packet status' },
         { name: 'packet_detail.origin_detail.city_name', title: 'Origin' },
         { name: 'packet_detail.destination_detail.city_name', title: 'Destination' },
         { name: 'packet_detail.departure_expectation_time', title: 'Expectation time' },
         { name: 'amount', title: 'Amount', sortField: 'amount', dataClass: 'has-text-right', callback: 'formatMoney' },
-        { name: 'status', title: 'Invoice status', callback: 'invoiceStatus' }
+        { name: '__slot:status', title: 'Invoice status' }
       ],
       css: {
         tableClass: 'table table-striped table-bordered',
@@ -116,23 +157,16 @@ export default {
         return '<button class="button is-warning is-fullwidth" v-on:click="statusPacketModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
       }
     },
-    invoiceStatus (value) {
-      if (value === 'unpaid') {
-        return '<button class="button is-danger is-fullwidth" v-on:click="statusInvoiceModal">Unpaid</button>'
-      } else if (value === 'prepaid') {
-        return '<button class="button is-primary is-fullwidth" v-on:click="statusInvoiceModal">Prepaid</button>'
-      } else if (value === 'paid') {
-        return '<button class="button is-success is-fullwidth" v-on:click="statusInvoiceModal">Paid</button>'
-      } else {
-        return '<button class="button is-light is-fullwidth" v-on:click="statusInvoiceModal">' + value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() + '</button>'
-      }
-    },
-    statusPacketModal: function () {
+    statusPacketModal: function (action, data, index) {
+      console.log('the value is: ' + action, data.packet_detail.status, index)
       this.$refs.statusPacketModal.active()
     },
-    statusInvoiceModal: function () {
+    statusInvoiceModal: function (action, data, index) {
+      console.log('the value is: ' + action, data.status, index)
       this.$refs.statusInvoiceModal.active()
     }
+  },
+  events: {
   }
 }
 </script>
