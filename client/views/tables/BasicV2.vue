@@ -1,13 +1,61 @@
 <template>
     <div>
-        <card-modal ref="statusPacketModal" transition="zoom">
+        <card-modal ref="statusPacketModal" @close="close" transition="zoom">
           <div class="content has-text-centered">
-
+            <div class="control is-horizontal">
+              <div class="control-label">
+                <label class="label">Packet ID</label>
+              </div>
+              <div class="control is-grouped">
+                <p class="control is-expanded">
+                  <input class="input" disabled>
+                </p>
+              </div>
+            </div>
+            <div class="control is-horizontal">
+              <div class="control-label">
+                <label class="label">Packet status</label>
+              </div>
+              <div class="control is-grouped">
+                <p class="control is-expanded">
+                  <span class="select">
+                    <select class="select">
+                      <option>Select dropdown</option>
+                      <option>With options</option>
+                    </select>
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </card-modal>
         <card-modal ref="statusInvoiceModal" transition="zoom">
           <div class="content has-text-centered">
-
+            <div class="control is-horizontal">
+              <div class="control-label">
+                <label class="label">Invoice ID</label>
+              </div>
+              <div class="control is-grouped">
+                <p class="control is-expanded">
+                  <input class="input" disabled>
+                </p>
+              </div>
+            </div>
+            <div class="control is-horizontal">
+              <div class="control-label">
+                <label class="label">Invoice status</label>
+              </div>
+              <div class="control is-grouped">
+                <p class="control is-expanded">
+                  <span class="select">
+                    <select class="select">
+                      <option>Select dropdown</option>
+                      <option>With options</option>
+                    </select>
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
         </card-modal>
         <div class="tile is-ancestor">
@@ -152,6 +200,9 @@ export default {
     statusInvoiceModal: function (action, data, index) {
       console.log('the value is: ' + action, data.status, index)
       this.$refs.statusInvoiceModal.active()
+    },
+    close () {
+      this.$emit('close')
     }
   },
   events: {
