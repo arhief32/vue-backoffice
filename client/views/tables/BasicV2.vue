@@ -1,6 +1,6 @@
 <template>
     <div>
-        <card-modal ref="statusPacketModal" @close="close" transition="zoom">
+        <card-modal ref="statusPacketModal" @ok="ok" @cancel="closeModal" transition="zoom">
           <div class="content has-text-centered">
             <div class="control is-horizontal">
               <div class="control-label">
@@ -8,7 +8,7 @@
               </div>
               <div class="control is-grouped">
                 <p class="control is-expanded">
-                  <input class="input" disabled>
+                  <input class="input" v-model="packet.id" disabled>
                 </p>
               </div>
             </div>
@@ -19,9 +19,15 @@
               <div class="control is-grouped">
                 <p class="control is-expanded">
                   <span class="select">
-                    <select class="select">
-                      <option>Select dropdown</option>
-                      <option>With options</option>
+                    <select class="select" v-model="packet.status">
+                      <option value="canceled">Canceled</option>
+                      <option value="pending">Pending</option>
+                      <option value="pick up by feeder">Picked up by feeder</option>
+                      <option value="on the way to traveler">On the way to traveler</option>
+                      <option value="pick up by traveler">Picked up by traveler</option>
+                      <option value="traveler arrived">Traveller Arrived</option>
+                      <option value="deliver by feeder">Deliver by feeder</option>
+                      <option value="completed">Completed</option>
                     </select>
                   </span>
                 </p>
@@ -29,7 +35,7 @@
             </div>
           </div>
         </card-modal>
-        <card-modal ref="statusInvoiceModal" transition="zoom">
+        <card-modal ref="statusInvoiceModal" @cancel="closeModal" transition="zoom">
           <div class="content has-text-centered">
             <div class="control is-horizontal">
               <div class="control-label">
@@ -37,7 +43,7 @@
               </div>
               <div class="control is-grouped">
                 <p class="control is-expanded">
-                  <input class="input" disabled>
+                  <input class="input" v-model="invoice.id" disabled>
                 </p>
               </div>
             </div>
@@ -48,9 +54,12 @@
               <div class="control is-grouped">
                 <p class="control is-expanded">
                   <span class="select">
-                    <select class="select">
-                      <option>Select dropdown</option>
-                      <option>With options</option>
+                    <select class="select" v-model="invoice.status">
+                      <option value="unpaid">unpaid</option>
+                      <option value="prepaid">prepaid</option>
+                      <option value="paid">paid</option>
+                      <option value="canceled">canceled</option>
+                      <option value="expired">expired</option>
                     </select>
                   </span>
                 </p>
@@ -61,7 +70,7 @@
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child box">
-                    <h4 class="title">Table with Vuetable</h4>
+                  <h4 class="title">Table with Vuetable</h4>
                     <div id="app-table">
                       <div class="ui container">
                         <vuetable-pagination ref="pagination"
@@ -136,7 +145,7 @@ export default {
   components: {
     'vuetable': Vuetable.Vuetable,
     'vuetable-pagination': Vuetable.VuetablePagination,
-    CardModal
+    'card-modal': CardModal
   },
   props: {
     rowData: {
@@ -160,6 +169,14 @@ export default {
         { name: 'amount', title: 'Amount', sortField: 'amount', dataClass: 'has-text-right', callback: 'formatMoney' },
         { name: '__slot:status', title: 'Invoice status' }
       ],
+      packet: {
+        id: '',
+        status: ''
+      },
+      invoice: {
+        id: '',
+        status: ''
+      },
       css: {
         tableClass: 'table table-striped table-bordered',
         loadingClass: 'loading',
@@ -194,15 +211,23 @@ export default {
       return 'Rp ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     statusPacketModal: function (action, data, index) {
-      console.log('the value is: ' + action, data.packet_detail.status, index)
+      console.log('the value is: ' + action, data.packet_detail, index)
+      this.packet.id = data.packet_detail.id
+      this.packet.status = data.packet_detail.status
       this.$refs.statusPacketModal.active()
     },
     statusInvoiceModal: function (action, data, index) {
       console.log('the value is: ' + action, data.status, index)
+      this.invoice.id = data.id
+      this.invoice.status = data.status
       this.$refs.statusInvoiceModal.active()
     },
-    close () {
-      this.$emit('close')
+    closeModal () {
+      this.$refs.statusPacketModal.deactive()
+      this.$refs.statusInvoiceModal.deactive()
+    },
+    ok () {
+      console.log('sokil gob')
     }
   },
   events: {
