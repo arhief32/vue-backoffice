@@ -27,13 +27,13 @@ export default {
       component: lazyLoading('tables/BasicV2')
     },
     {
-      name: 'BasicTablesV3',
-      path: '/tables/basicv3',
+      name: 'TableExample',
+      path: '/tables/table-example',
       meta: {
-        label: 'Basic Tables V3',
-        link: 'tables/BasicV3.vue'
+        label: 'Table Example',
+        link: 'tables/TableExample.vue'
       },
-      component: lazyLoading('tables/BasicV3')
+      component: lazyLoading('tables/TableExample')
     }
   ]
 }

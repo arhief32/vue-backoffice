@@ -70,9 +70,10 @@
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child box">
-                  <h4 class="title">Table with Vuetable</h4>
+                  <h4 class="title">Table with Vuetable scrapping</h4>
                     <div id="app-table">
                       <div class="ui container">
+                        <filter-bar></filter-bar>
                         <vuetable-pagination ref="pagination"
                           :css="css.pagination"
                           @vuetable-pagination:change-page="onChangePage">
@@ -140,12 +141,14 @@
 <script>
 import * as Vuetable from 'vuetable-2'
 import { CardModal } from 'vue-bulma-modal'
+import FilterBar from './FilterBar'
 
 export default {
   components: {
     'vuetable': Vuetable.Vuetable,
     'vuetable-pagination': Vuetable.VuetablePagination,
-    'card-modal': CardModal
+    'card-modal': CardModal,
+    'filter-bar': FilterBar
   },
   props: {
     rowData: {
